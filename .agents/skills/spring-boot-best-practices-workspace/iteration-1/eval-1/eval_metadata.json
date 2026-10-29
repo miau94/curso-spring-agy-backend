@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "user-management-api",
+  "prompt": "Create a basic Spring Boot project named 'user-manager' using Java 25 and Spring Boot 4.1.0 with controllers, services, repositories, and models for a User entity. The User entity should have id, username, email, and password (which is sensitive). Make sure to use record for DTOs, application.properties, a mapper class, and include the Maven Wrapper.",
+  "assertions": [
+    "The project uses Java version 25 and Spring Boot version 4.1.0 or higher in pom.xml.",
+    "Maven Wrapper files (.mvn directory, mvnw, and mvnw.cmd) exist in the root of the project.",
+    "The project uses application.properties for configuration, and no application.yml or application.yaml files are present.",
+    "The UserDto is defined as a record and does not contain sensitive fields (password, createdAt, updatedAt, createAt, updateAt).",
+    "The UserRepository is an interface that extends JpaRepository.",
+    "A UserMapper class exists to explicitly map between User entity and UserDto in both directions.",
+    "UserController delegates to UserService, and only exposes REST endpoints returning DTO records."
+  ]
+}

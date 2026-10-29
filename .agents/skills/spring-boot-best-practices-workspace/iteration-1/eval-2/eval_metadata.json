@@ -1,0 +1,14 @@
+{
+  "eval_id": 2,
+  "eval_name": "bookstore-thymeleaf-web",
+  "prompt": "Initialize a Spring Boot project named 'bookstore' (Java 25, Spring Boot 4.1.0) and build a Thymeleaf web monolith for displaying books. Include a reusable base layout with header, main, and footer (centered content), Tailwind CSS configuration, and a Book controller, service, repository, and mapper. Exclude sensitive fields from the Book DTO record.",
+  "assertions": [
+    "The project uses Java version 25 and Spring Boot version 4.1.0 or higher in pom.xml.",
+    "Maven Wrapper files (.mvn directory, mvnw, and mvnw.cmd) exist in the root of the project.",
+    "The UI structure includes Thymeleaf templates layouts/base.html, fragments/header.html, and fragments/footer.html.",
+    "The Thymeleaf views utilize semantic HTML5 elements including header, main, and footer.",
+    "The BookDto is defined as a record and does not contain sensitive fields (password, createdAt, updatedAt, createAt, updateAt).",
+    "A BookMapper class exists to explicitly map between Book entity and BookDto in both directions.",
+    "The repository layer extends JpaRepository for access."
+  ]
+}

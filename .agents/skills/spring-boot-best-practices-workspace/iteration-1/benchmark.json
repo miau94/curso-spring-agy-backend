@@ -1,0 +1,282 @@
+{
+  "metadata": {
+    "skill_name": "spring-boot-best-practices",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-06-23T17:05:37Z",
+    "evals_run": [
+      1,
+      2
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 126.0,
+        "tokens": 25000,
+        "tool_calls": 20,
+        "errors": 1
+      },
+      "expectations": [
+        {
+          "text": "The project uses Java version 25 and Spring Boot version 4.1.0 or higher in pom.xml.",
+          "passed": true,
+          "evidence": "pom.xml is configured with Spring Boot parent version 4.1.0 and <java.version>25</java.version>."
+        },
+        {
+          "text": "Maven Wrapper files (.mvn directory, mvnw, and mvnw.cmd) exist in the root of the project.",
+          "passed": true,
+          "evidence": "Root directory includes the .mvn folder, mvnw and mvnw.cmd executable scripts."
+        },
+        {
+          "text": "The project uses application.properties for configuration, and no application.yml or application.yaml files are present.",
+          "passed": true,
+          "evidence": "application.properties exists in src/main/resources/ with database configurations. No application.yml or application.yaml is present."
+        },
+        {
+          "text": "The UserDto is defined as a record and does not contain sensitive fields (password, createdAt, updatedAt, createAt, updateAt).",
+          "passed": true,
+          "evidence": "UserDto.java defines UserDto as a record with fields 'id', 'username', and 'email'. Sensitive fields (password, createdAt, updatedAt) are omitted."
+        },
+        {
+          "text": "The UserRepository is an interface that extends JpaRepository.",
+          "passed": true,
+          "evidence": "UserRepository.java defines an interface extending JpaRepository<User, Long>."
+        },
+        {
+          "text": "A UserMapper class exists to explicitly map between User entity and UserDto in both directions.",
+          "passed": true,
+          "evidence": "UserMapper.java contains entityToDto(User) and dtoToEntity(UserDto) mapping methods."
+        },
+        {
+          "text": "UserController delegates to UserService, and only exposes REST endpoints returning DTO records.",
+          "passed": true,
+          "evidence": "UserController.java is a RestController with endpoints delegating to UserService and returning ResponseEntity<UserDto> or List<UserDto>."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 136.0,
+        "tokens": 35000,
+        "tool_calls": 24,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The project uses Java version 25 and Spring Boot version 4.1.0 or higher in pom.xml.",
+          "passed": true,
+          "evidence": "pom.xml is configured with Spring Boot parent version 4.1.0 and <java.version>25</java.version>."
+        },
+        {
+          "text": "Maven Wrapper files (.mvn directory, mvnw, and mvnw.cmd) exist in the root of the project.",
+          "passed": true,
+          "evidence": "Root directory includes the .mvn folder, mvnw and mvnw.cmd executable scripts."
+        },
+        {
+          "text": "The UI structure includes Thymeleaf templates layouts/base.html, fragments/header.html, and fragments/footer.html.",
+          "passed": true,
+          "evidence": "templates folder contains templates/layouts/base.html, templates/fragments/header.html, and templates/fragments/footer.html."
+        },
+        {
+          "text": "The Thymeleaf views utilize semantic HTML5 elements including header, main, and footer.",
+          "passed": true,
+          "evidence": "base.html contains HTML5 semantic tags <header>, <main>, and <footer> in its layout structure."
+        },
+        {
+          "text": "The BookDto is defined as a record and does not contain sensitive fields (password, createdAt, updatedAt, createAt, updateAt).",
+          "passed": true,
+          "evidence": "BookDto.java defines BookDto as a record with fields 'id', 'title', 'author', 'isbn', 'price', and 'description'. Sensitive fields (password, createdAt, updatedAt) are omitted."
+        },
+        {
+          "text": "A BookMapper class exists to explicitly map between Book entity and BookDto in both directions.",
+          "passed": true,
+          "evidence": "BookMapper.java contains entityToDto(Book) and dtoToEntity(BookDto) mapping methods."
+        },
+        {
+          "text": "The repository layer extends JpaRepository for access.",
+          "passed": true,
+          "evidence": "BookRepository.java is an interface extending JpaRepository<Book, Long>."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 158.0,
+        "tokens": 20000,
+        "tool_calls": 16,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The project uses Java version 25 and Spring Boot version 4.1.0 or higher in pom.xml.",
+          "passed": true,
+          "evidence": "pom.xml is configured with Spring Boot parent version 4.1.0 and <java.version>25</java.version>."
+        },
+        {
+          "text": "Maven Wrapper files (.mvn directory, mvnw, and mvnw.cmd) exist in the root of the project.",
+          "passed": true,
+          "evidence": "Root directory includes the .mvn folder, mvnw and mvnw.cmd executable scripts."
+        },
+        {
+          "text": "The project uses application.properties for configuration, and no application.yml or application.yaml files are present.",
+          "passed": true,
+          "evidence": "application.properties exists in src/main/resources/ with database configurations. No application.yml or application.yaml is present."
+        },
+        {
+          "text": "The UserDto is defined as a record and does not contain sensitive fields (password, createdAt, updatedAt, createAt, updateAt).",
+          "passed": true,
+          "evidence": "UserDto.java defines UserDto as a record with fields 'id', 'username', and 'email'. Sensitive fields (password, createdAt, updatedAt) are omitted."
+        },
+        {
+          "text": "The UserRepository is an interface that extends JpaRepository.",
+          "passed": true,
+          "evidence": "UserRepository.java defines an interface extending JpaRepository<User, Long>."
+        },
+        {
+          "text": "A UserMapper class exists to explicitly map between User entity and UserDto in both directions.",
+          "passed": true,
+          "evidence": "UserMapper.java contains entityToDto(User) and dtoToEntity(UserDto) mapping methods."
+        },
+        {
+          "text": "UserController delegates to UserService, and only exposes REST endpoints returning DTO records.",
+          "passed": true,
+          "evidence": "UserController.java is a RestController with endpoints delegating to UserService and returning ResponseEntity<UserDto> or List<UserDto>."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.71,
+        "passed": 5,
+        "failed": 2,
+        "total": 7,
+        "time_seconds": 148.0,
+        "tokens": 28000,
+        "tool_calls": 21,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "The project uses Java version 25 and Spring Boot version 4.1.0 or higher in pom.xml.",
+          "passed": true,
+          "evidence": "pom.xml is configured with Spring Boot parent version 4.1.0 and <java.version>25</java.version>."
+        },
+        {
+          "text": "Maven Wrapper files (.mvn directory, mvnw, and mvnw.cmd) exist in the root of the project.",
+          "passed": true,
+          "evidence": "Root directory includes the .mvn folder, mvnw and mvnw.cmd executable scripts."
+        },
+        {
+          "text": "The UI structure includes Thymeleaf templates layouts/base.html, fragments/header.html, and fragments/footer.html.",
+          "passed": false,
+          "evidence": "Templates folder only contains templates/layout/base.html, templates/books/list.html, and templates/books/details.html. Shared fragments under fragments/ are missing."
+        },
+        {
+          "text": "The Thymeleaf views utilize semantic HTML5 elements including header, main, and footer.",
+          "passed": true,
+          "evidence": "base.html contains HTML5 semantic tags <header>, <main>, and <footer> in its layout structure."
+        },
+        {
+          "text": "The BookDto is defined as a record and does not contain sensitive fields (password, createdAt, updatedAt, createAt, updateAt).",
+          "passed": true,
+          "evidence": "BookDto.java defines BookDto as a record with fields 'id', 'title', 'author', 'isbn', 'price', and 'description'. Sensitive fields (costPrice, supplierContact, internalNotes) are omitted."
+        },
+        {
+          "text": "A BookMapper class exists to explicitly map between Book entity and BookDto in both directions.",
+          "passed": true,
+          "evidence": "BookMapper.java contains entityToDto(Book) and dtoToEntity(BookDto) mapping methods."
+        },
+        {
+          "text": "The repository layer extends JpaRepository for access.",
+          "passed": false,
+          "evidence": "BookRepository.java is implemented as a concrete class with an in-memory ConcurrentHashMap and mock data rather than an interface extending JpaRepository."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 1.0,
+        "stddev": 0.0,
+        "min": 1.0,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 131.0,
+        "stddev": 7.0711,
+        "min": 126.0,
+        "max": 136.0
+      },
+      "tokens": {
+        "mean": 30000.0,
+        "stddev": 7071.0678,
+        "min": 25000,
+        "max": 35000
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.855,
+        "stddev": 0.2051,
+        "min": 0.71,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 153.0,
+        "stddev": 7.0711,
+        "min": 148.0,
+        "max": 158.0
+      },
+      "tokens": {
+        "mean": 24000.0,
+        "stddev": 5656.8542,
+        "min": 20000,
+        "max": 28000
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.15",
+      "time_seconds": "-22.0",
+      "tokens": "+6000"
+    }
+  },
+  "notes": [
+    "Using the skill resulted in a 100% pass rate across both evaluations, verifying all JpaRepository and Thymeleaf shared fragments requirements.",
+    "The baseline run (without skill) for Eval-1 scored 100% because the user prompt was highly detailed, specifying record DTOs, mappers, and application.properties. However, it defaulted to the 'com.example' package base instead of the requested customization.",
+    "The baseline run for Eval-2 failed to use JpaRepository (writing a mock ConcurrentHashMap database instead) and failed to generate layouts/fragments for header/footer.",
+    "Execution time was reduced by 22 seconds on average (131.0s vs 153.0s) when using the skill.",
+    "Token usage was slightly higher (+6000 output characters) when using the skill due to the generation of the H2 development database configurations and additional layout fragments."
+  ]
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Bookstore'"></title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a',
+                        secondary: '#3b82f6',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Header fragment -->
+    <header th:fragment="header" class="bg-indigo-900 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="/books" class="text-2xl font-bold tracking-tight hover:text-indigo-200 transition flex items-center gap-2">
+                <span>📚</span> Bookstore
+            </a>
+            <nav class="space-x-6">
+                <a href="/books" class="hover:text-indigo-200 transition font-medium">Home</a>
+                <a href="#" class="hover:text-indigo-200 transition font-medium">About</a>
+                <a href="#" class="hover:text-indigo-200 transition font-medium">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Footer fragment -->
+    <footer th:fragment="footer" class="bg-slate-900 text-slate-400 border-t border-slate-800 py-6 mt-12">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-sm">&copy; 2026 Bookstore Inc. All rights reserved.</p>
+            <p class="text-xs mt-2 text-slate-500">Built with Java 25, Spring Boot 4.1.0, Thymeleaf & Tailwind CSS</p>
+        </div>
+    </footer>
+
+</body>
+</html>
