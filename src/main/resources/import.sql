@@ -8,3 +8,7 @@ INSERT INTO customers (first_name, last_name, email, phone, address, created_at,
 INSERT INTO customers (first_name, last_name, email, phone, address, created_at, updated_at) VALUES ('Sofía', 'Sánchez', 'sofia.sanchez@example.com', '+34 600 888 999', 'Calle Uría 30, Oviedo', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO customers (first_name, last_name, email, phone, address, created_at, updated_at) VALUES ('Daniel', 'Ramírez', 'daniel.ramirez@example.com', '+34 600 999 000', 'Calle Reyes Católicos 15, Granada', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 INSERT INTO customers (first_name, last_name, email, phone, address, created_at, updated_at) VALUES ('Paula', 'Torres', 'paula.torres@example.com', '+34 601 000 111', 'Calle San Miguel 22, Palma', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- Default Users (password is 'password123')
+INSERT INTO users (email, password, role, created_at, updated_at) VALUES ('admin@example.com', '$2a$10$tiOcQB/b/8MuQCOgPVRoXeEUELJILVhHaDtJsVWo2Jp7mr3XzFG/S', 'ADMIN', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users (email, password, role, created_at, updated_at) VALUES ('user@example.com', '$2a$10$tiOcQB/b/8MuQCOgPVRoXeEUELJILVhHaDtJsVWo2Jp7mr3XzFG/S', 'USER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
