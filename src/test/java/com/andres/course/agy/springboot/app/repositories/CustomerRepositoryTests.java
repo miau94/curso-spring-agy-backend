@@ -18,6 +18,11 @@ class CustomerRepositoryTests {
     private CustomerRepository customerRepository;
 
     @Test
+    void testInitialCustomersLoadedFromImportSql() {
+        assertEquals(10, customerRepository.count());
+    }
+
+    @Test
     void testSaveCustomerAndAuditing() {
         Customer customer = new Customer("John", "Doe", "john.doe.test@example.com", "123456789", "123 Main St");
 
