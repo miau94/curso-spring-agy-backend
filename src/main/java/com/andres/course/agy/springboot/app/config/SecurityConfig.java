@@ -1,4 +1,4 @@
-package com.andres.course.agy.springboot.app.security;
+package com.andres.course.agy.springboot.app.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.andres.course.agy.springboot.app.security.JwtAuthenticationFilter;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -23,19 +25,24 @@ public class SecurityConfig {
     /**
      * Constructor que inyecta el filtro de autenticación JWT personalizado.
      *
-     * @param jwtAuthenticationFilter Filtro que valida el token JWT en cada petición HTTP.
+     * @param jwtAuthenticationFilter Filtro que valida el token JWT en cada
+     *                                petición HTTP.
      */
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
     /**
-     * Configura la cadena de filtros de seguridad HTTP (stateless, reglas de autorización por rol,
-     * manejo de errores 401/403 y registro del filtro JWT antes del filtro de autenticación estándar).
+     * Configura la cadena de filtros de seguridad HTTP (stateless, reglas de
+     * autorización por rol,
+     * manejo de errores 401/403 y registro del filtro JWT antes del filtro de
+     * autenticación estándar).
      *
-     * @param http Objeto HttpSecurity para definir la configuración de seguridad web.
+     * @param http Objeto HttpSecurity para definir la configuración de seguridad
+     *             web.
      * @return La cadena de filtros SecurityFilterChain construida.
-     * @throws Exception Si ocurre algún error al construir la configuración de seguridad.
+     * @throws Exception Si ocurre algún error al construir la configuración de
+     *                   seguridad.
      */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -73,7 +80,8 @@ public class SecurityConfig {
     }
 
     /**
-     * Define el bean encargado de encriptar y verificar las contraseñas utilizando el algoritmo BCrypt.
+     * Define el bean encargado de encriptar y verificar las contraseñas utilizando
+     * el algoritmo BCrypt.
      *
      * @return Instancia de BCryptPasswordEncoder.
      */
@@ -83,7 +91,8 @@ public class SecurityConfig {
     }
 
     /**
-     * Expone el AuthenticationManager de Spring Security como un bean para procesar las solicitudes de login.
+     * Expone el AuthenticationManager de Spring Security como un bean para procesar
+     * las solicitudes de login.
      *
      * @param config Configuración de autenticación provista por Spring Security.
      * @return El AuthenticationManager configurado.
