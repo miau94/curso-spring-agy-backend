@@ -81,7 +81,13 @@ Paquete base: `com.andres.course.agy.springboot.app`
 4. **Inyección de Dependencias**: Utilizar siempre inyección por constructor (sin `@Autowired` en campos).
 5. **Testing**: Pruebas unitarias y de integración en `src/test/java` (`ApplicationTests`, `CustomerRepositoryTests`, `CustomerServiceImplTests`, `UserServiceImplTests`, `SecurityIntegrationTests`, `DefaultUsersImportTests`).
 
-## 6. Comandos Frecuentes (Maven Wrapper)
+## 6. Skills del Proyecto (`.agents/skills/` y `skills-lock.json`)
+- **`spring-boot-best-practices`** (`.agents/skills/spring-boot-best-practices/SKILL.md`): Estándares de arquitectura en capas para Spring Boot (`controllers`, `services`, `repositories`, `models`, `dto`, `mappers`), uso de `record` en DTOs, inyección por constructor y configuración en `application.properties`.
+- **`supabase`** (`.agents/skills/supabase/SKILL.md`): Soporte integral para el ecosistema Supabase (Database, Auth, sesiones/JWT, CLI/MCP, configuración de conexión y resolución de errores).
+- **`supabase-postgres-best-practices`** (`.agents/skills/supabase-postgres-best-practices/SKILL.md`): Buenas prácticas de PostgreSQL mantenidas por Supabase (diseño de esquemas y tipos de datos, índices, optimización de consultas, gestión de conexiones/pooling, migraciones y políticas de seguridad RLS).
+- **`skill-creator`** (`.agents/skills/skill-creator/SKILL.md`): Creación, mejora y evaluación de nuevas skills para el agente.
+
+## 7. Comandos Frecuentes (Maven Wrapper)
 - **Ejecutar la aplicación**: `./mvnw -DskipTests spring-boot:run`
 - **Ejecutar pruebas**: `./mvnw test`
 - **Compilar y empaquetar**: `./mvnw clean package`
