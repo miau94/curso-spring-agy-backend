@@ -58,6 +58,9 @@ class SecurityIntegrationTests {
 
         mockMvc.perform(get("/api/users"))
                 .andExpect(status().isUnauthorized());
+
+        mockMvc.perform(get("/api/invoices"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -77,11 +80,22 @@ class SecurityIntegrationTests {
         mockMvc.perform(get("/api/customers").cookie(jwtCookie))
                 .andExpect(status().isOk());
 
+        // USER can GET /api/invoices and /api/invoices/customer/{id}
+        mockMvc.perform(get("/api/invoices").cookie(jwtCookie))
+                .andExpect(status().isOk());
+
         // USER cannot POST /api/customers (403 Forbidden)
         mockMvc.perform(post("/api/customers")
                         .cookie(jwtCookie)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"firstName\":\"New\",\"lastName\":\"Customer\",\"email\":\"new.cust@example.com\"}"))
+                .andExpect(status().isForbidden());
+
+        // USER cannot POST /api/invoices (403 Forbidden)
+        mockMvc.perform(post("/api/invoices")
+                        .cookie(jwtCookie)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"customerId\":1,\"description\":\"Test Invoice\",\"amount\":100.00,\"status\":\"PENDING\"}"))
                 .andExpect(status().isForbidden());
 
         // USER cannot access /api/users (403 Forbidden)
@@ -111,6 +125,18 @@ class SecurityIntegrationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"firstName\":\"AdminCreated\",\"lastName\":\"Customer\",\"email\":\"admin.cust@example.com\"}"))
                 .andExpect(status().isCreated());
+
+        // ADMIN can GET and POST /api/invoices
+        mockMvc.perform(get("/api/invoices").cookie(jwtCookie))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/api/invoices")
+                        .cookie(jwtCookie)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"customerId\":1,\"description\":\"Factura Admin\",\"amount\":500.00,\"status\":\"PAID\",\"items\":[{\"description\":\"Servicio\",\"quantity\":1,\"unitPrice\":500.00}]}"))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.description").value("Factura Admin"))
+                .andExpect(jsonPath("$.status").value("PAID"));
 
         // ADMIN can GET and POST /api/users
         mockMvc.perform(get("/api/users").cookie(jwtCookie))

@@ -1,7 +1,9 @@
 package com.andres.course.agy.springboot.app.controllers;
 
 import com.andres.course.agy.springboot.app.dto.CustomerDto;
+import com.andres.course.agy.springboot.app.dto.InvoiceDto;
 import com.andres.course.agy.springboot.app.services.CustomerService;
+import com.andres.course.agy.springboot.app.services.InvoiceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +16,11 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private final InvoiceService invoiceService;
 
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, InvoiceService invoiceService) {
         this.customerService = customerService;
+        this.invoiceService = invoiceService;
     }
 
     @GetMapping
@@ -29,6 +33,12 @@ public class CustomerController {
     public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long id) {
         CustomerDto customer = customerService.findById(id);
         return ResponseEntity.ok(customer);
+    }
+
+    @GetMapping("/{id}/invoices")
+    public ResponseEntity<List<InvoiceDto>> getCustomerInvoices(@PathVariable Long id) {
+        List<InvoiceDto> invoices = invoiceService.findByCustomerId(id);
+        return ResponseEntity.ok(invoices);
     }
 
     @PostMapping

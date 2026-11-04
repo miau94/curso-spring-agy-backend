@@ -70,6 +70,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/customers", "/api/customers/**").hasRole("ADMIN")
                         // solo admin
                         .requestMatchers(HttpMethod.DELETE, "/api/customers", "/api/customers/**").hasRole("ADMIN")
+                        // leer facturas, usuario o admin
+                        .requestMatchers(HttpMethod.GET, "/api/invoices", "/api/invoices/**")
+                        .hasAnyRole("USER", "ADMIN")
+                        // administrar facturas, solo admin
+                        .requestMatchers(HttpMethod.POST, "/api/invoices", "/api/invoices/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/invoices", "/api/invoices/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/invoices", "/api/invoices/**").hasRole("ADMIN")
                         // solo admin
                         .requestMatchers("/api/users", "/api/users/**").hasRole("ADMIN")
                         // cualquier otra peticion requiere autenticacion

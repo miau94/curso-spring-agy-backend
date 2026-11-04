@@ -1,13 +1,20 @@
 package com.andres.course.agy.springboot.app.config;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.andres.course.agy.springboot.app.models.Customer;
+import com.andres.course.agy.springboot.app.models.Invoice;
+import com.andres.course.agy.springboot.app.models.InvoiceItem;
+import com.andres.course.agy.springboot.app.models.InvoiceStatus;
 import com.andres.course.agy.springboot.app.models.Role;
 import com.andres.course.agy.springboot.app.models.User;
 import com.andres.course.agy.springboot.app.repositories.CustomerRepository;
+import com.andres.course.agy.springboot.app.repositories.InvoiceRepository;
 import com.andres.course.agy.springboot.app.repositories.UserRepository;
 
 @Component
@@ -15,12 +22,14 @@ public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
+    private final InvoiceRepository invoiceRepository;
     private final PasswordEncoder passwordEncoder;
 
     public DataInitializer(UserRepository userRepository, CustomerRepository customerRepository,
-            PasswordEncoder passwordEncoder) {
+            InvoiceRepository invoiceRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.customerRepository = customerRepository;
+        this.invoiceRepository = invoiceRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -67,6 +76,48 @@ public class DataInitializer implements CommandLineRunner {
                     "Calle San Miguel 22, Palma"));
 
             System.out.println("10 customers created");
+        }
+
+        if (invoiceRepository.count() == 0) {
+            List<Customer> customers = customerRepository.findAll();
+            if (customers.size() >= 4) {
+                Customer c1 = customers.get(0);
+                Customer c2 = customers.get(1);
+                Customer c3 = customers.get(2);
+                Customer c4 = customers.get(3);
+
+                Invoice inv1 = new Invoice(c1, "Desarrollo e implantación de API REST Spring Boot",
+                        new BigDecimal("1850.00"), InvoiceStatus.PAID);
+                inv1.addItem(new InvoiceItem("Diseño de arquitectura y seguridad JWT", 1, new BigDecimal("850.00")));
+                inv1.addItem(new InvoiceItem("Desarrollo de endpoints CRUD y pruebas", 2, new BigDecimal("500.00")));
+                invoiceRepository.save(inv1);
+
+                Invoice inv2 = new Invoice(c1, "Mantenimiento mensual y soporte cloud",
+                        new BigDecimal("450.00"), InvoiceStatus.PENDING);
+                inv2.addItem(new InvoiceItem("Soporte técnico y monitorización 24/7", 1, new BigDecimal("300.00")));
+                inv2.addItem(new InvoiceItem("Optimización de base de datos PostgreSQL", 1, new BigDecimal("150.00")));
+                invoiceRepository.save(inv2);
+
+                Invoice inv3 = new Invoice(c2, "Rediseño de aplicación web en React 19",
+                        new BigDecimal("2400.00"), InvoiceStatus.PAID);
+                inv3.addItem(new InvoiceItem("Diseño UI/UX y sistema de componentes", 1, new BigDecimal("900.00")));
+                inv3.addItem(new InvoiceItem("Integración con estado global Zustand y Zod", 3, new BigDecimal("500.00")));
+                invoiceRepository.save(inv3);
+
+                Invoice inv4 = new Invoice(c3, "Auditoría de seguridad y rendimiento",
+                        new BigDecimal("1200.00"), InvoiceStatus.OVERDUE);
+                inv4.addItem(new InvoiceItem("Análisis de vulnerabilidades OWASP", 1, new BigDecimal("750.00")));
+                inv4.addItem(new InvoiceItem("Pruebas de carga y optimización de índices", 1, new BigDecimal("450.00")));
+                invoiceRepository.save(inv4);
+
+                Invoice inv5 = new Invoice(c4, "Licencias de software y equipamiento de oficina",
+                        new BigDecimal("980.00"), InvoiceStatus.CANCELLED);
+                inv5.addItem(new InvoiceItem("Licencia anual entorno empresarial", 2, new BigDecimal("290.00")));
+                inv5.addItem(new InvoiceItem("Monitor profesional 27 pulgadas 4K", 1, new BigDecimal("400.00")));
+                invoiceRepository.save(inv5);
+
+                System.out.println("5 invoices created");
+            }
         }
     }
 
