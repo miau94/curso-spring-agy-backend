@@ -9,15 +9,21 @@ API RESTful construida con **Spring Boot** para la gestión de clientes (`Custom
 - **Dependencias Principales**:
   - `spring-boot-starter-web`, `spring-boot-starter-data-jpa`, `spring-boot-starter-validation`, `spring-boot-starter-actuator`
   - `spring-boot-starter-security` + `io.jsonwebtoken:jjwt-*` (0.12.6) para autenticación JWT stateless
-  - `com.h2database:h2`, `spring-boot-h2console` (BD en memoria) y `spring-boot-devtools`
-  - `spring-boot-starter-test`, `spring-security-test` (Testing)
-- **Base de Datos (H2) y Datos Iniciales**:
-  - URL: `jdbc:h2:mem:testdb` | Usuario: `sa` | Contraseña: *(vacía)* | Consola H2: `/h2-console` (`true`) | DDL: `update`
-  - `src/main/resources/import.sql`: Carga 10 clientes y 2 usuarios iniciales (`admin@example.com` [`ADMIN`] y `user@example.com` [`USER`], contraseña: `password123`).
+  - `org.postgresql:postgresql` (`runtime`, BD principal) y `spring-boot-devtools`
+  - `com.h2database:h2` (`test`, BD en memoria para pruebas), `spring-boot-starter-test`, `spring-security-test` (Testing)
+- **Variables de Entorno (`.env`)**:
+  - Importadas automáticamente en `src/main/resources/application.properties` mediante `spring.config.import=optional:file:.env[.properties]` (el archivo `.env` está excluido en `.gitignore`).
+- **Base de Datos y Datos Iniciales**:
+  - **PostgreSQL / Supabase (`src/main/resources/application.properties`)**:
+    - URL: `${SUPABASE_DB_URL}` (Session Pooler IPv4 de Supabase o PostgreSQL en Docker local `localhost:5433/spring_backend`) | Usuario: `${SUPABASE_DB_USER}` | Contraseña: `${SUPABASE_DB_PASS}` | Dialect: `PostgreSQLDialect` | DDL: `update`
+  - **H2 para Testing (`src/test/resources/application.properties`)**:
+    - URL: `jdbc:h2:mem:testdb` | Usuario: `sa` | Contraseña: *(vacía)* | Dialect: `H2Dialect` | DDL: `create-drop`
+  - **Inicialización de Datos (`DataInitializer`)**:
+    - Componente `CommandLineRunner` que verifica si las tablas están vacías (`count() == 0`) al iniciar la aplicación y carga 10 clientes y 2 usuarios iniciales (`admin@example.com` [`ADMIN`] y `user@example.com` [`USER`], contraseña: `password123`).
 - **Configuración JWT (`application.properties`)**:
-  - `jwt.secret`: Clave secreta hexadecimal HMAC-SHA
-  - `jwt.expiration`: `86400000` ms (24 horas)
-  - `jwt.cookie-name`: `jwt_token` (`HttpOnly`)
+  - `jwt.secret`: `${JWT_SECRET}` (Clave secreta hexadecimal HMAC-SHA)
+  - `jwt.expiration`: `${JWT_EXPIRATION}` (ej. `86400000` ms / 24 horas)
+  - `jwt.cookie-name`: `${JWT_COOKIE}` (ej. `jwt_token`, `HttpOnly`)
 
 ## 3. Estructura de Paquetes y Arquitectura
 Paquete base: `com.andres.course.agy.springboot.app`
@@ -31,7 +37,8 @@ Paquete base: `com.andres.course.agy.springboot.app`
   - `Role` (enum: `USER`, `ADMIN`).
 - **`dto`**: Implementados como `record` de Java sin exponer contraseñas ni auditoría en respuestas (`CustomerDto`, `UserDto`, `UserRequestDto`, `AuthRequestDto`).
 - **`mappers`**: Conversión explícita Entidad <-> DTO (`CustomerMapper`, `UserMapper`).
-- **`security`**: Configuración JWT y Spring Security stateless (`SecurityConfig`, `JwtService`, `JwtAuthenticationFilter`).
+- **`config`**: Configuración general de la aplicación, seguridad HTTP stateless (`SecurityConfig`) e inicialización programática de datos (`DataInitializer`).
+- **`security`**: Utilidades y filtros para autenticación JWT (`JwtService`, `JwtAuthenticationFilter`).
 - **`exceptions`**: Manejo centralizado con `@RestControllerAdvice` (`GlobalExceptionHandler`, `ErrorResponse`, `CustomerNotFoundException`, `UserNotFoundException`, `EmailAlreadyExistsException`).
 
 ## 4. Endpoints Disponibles
@@ -68,7 +75,7 @@ Paquete base: `com.andres.course.agy.springboot.app`
 | `GET` | `/actuator/**` | Público | Endpoints de monitorización y estado de Spring Boot Actuator (ej. `/actuator/health`). |
 
 ## 5. Reglas y Convenciones de Desarrollo
-1. **Configuración**: Usar exclusivamente `application.properties` (no usar archivos `.yml` / `.yaml`).
+1. **Configuración**: Usar exclusivamente `application.properties` (no usar archivos `.yml` / `.yaml`) y externalizar credenciales/secretos en `.env` (ignorado en Git).
 2. **Desacoplamiento**: Los controladores solo interactúan con `dto`. La conversión DTO <-> Entidad se realiza en `services` mediante `mappers`.
 3. **DTOs**: Definir siempre como `record`, excluyendo campos sensibles (`password` en respuestas) y de auditoría (`createdAt`, `updatedAt`).
 4. **Inyección de Dependencias**: Utilizar siempre inyección por constructor (sin `@Autowired` en campos).
