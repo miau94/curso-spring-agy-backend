@@ -103,6 +103,7 @@ Paquete base: `com.andres.course.agy.springboot.app`
 - **Servidores MCP (`mcp_config.json`)**:
   - **`supabase`**: Gestión de tablas, migraciones, consultas SQL y diagnóstico del proyecto Supabase (`jjqmxfexxbxtenmofjmu`).
   - **`chrome-devtools`**: Pruebas end-to-end e inspección automatizada del navegador (`http://127.0.0.1:9222`).
+  - **`github`**: Integración oficial remota con GitHub (`https://api.githubcopilot.com/mcp/`) para gestión de repositorios, ramas, commits, issues y Pull Requests.
 
 ## 7. Comandos Frecuentes (Maven Wrapper)
 - **Ejecutar la aplicación**: `./mvnw -DskipTests spring-boot:run`
