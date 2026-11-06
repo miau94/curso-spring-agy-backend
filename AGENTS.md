@@ -20,10 +20,15 @@ API RESTful construida con **Spring Boot** para la gestión de clientes (`Custom
     - URL: `jdbc:h2:mem:testdb` | Usuario: `sa` | Contraseña: *(vacía)* | Dialect: `H2Dialect` | DDL: `create-drop`
   - **Inicialización de Datos (`DataInitializer`)**:
     - Componente `CommandLineRunner` que verifica si las tablas están vacías (`count() == 0`) al iniciar la aplicación y carga 10 clientes, 2 usuarios iniciales (`admin@example.com` [`ADMIN`] y `user@example.com` [`USER`], contraseña: `password123`) y 5 facturas con sus líneas de detalle (asignando 2 facturas al cliente #1).
-- **Configuración JWT (`application.properties`)**:
+- **Configuración JWT y Cookies (`application.properties`)**:
   - `jwt.secret`: `${JWT_SECRET}` (Clave secreta hexadecimal HMAC-SHA)
   - `jwt.expiration`: `${JWT_EXPIRATION}` (ej. `86400000` ms / 24 horas)
   - `jwt.cookie-name`: `${JWT_COOKIE}` (ej. `jwt_token`, `HttpOnly`)
+  - `jwt.cookie-same-site`: `${JWT_COOKIE_SAME_SITE}` (para entornos cross-site entre frontend y backend)
+  - `jwt.cookie-secure`: `${JWT_COOKIE_SECURE}`
+- **Configuración CORS (`application.properties`)**:
+  - `cors.allowed-origins`: `${CORS_ALLOWED_ORIGINS}` (lista de orígenes permitidos separados por coma, definidos en `.env`).
+
 
 ## 3. Estructura de Paquetes y Arquitectura
 Paquete base: `com.andres.course.agy.springboot.app`

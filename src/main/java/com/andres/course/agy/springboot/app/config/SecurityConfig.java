@@ -1,6 +1,7 @@
 package com.andres.course.agy.springboot.app.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,27 +14,37 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.andres.course.agy.springboot.app.security.JwtAuthenticationFilter;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final String allowedOrigins;
 
     /**
-     * Constructor que inyecta el filtro de autenticación JWT personalizado.
+     * Constructor que inyecta el filtro de autenticación JWT y los orígenes permitidos de CORS.
      *
-     * @param jwtAuthenticationFilter Filtro que valida el token JWT en cada
-     *                                petición HTTP.
+     * @param jwtAuthenticationFilter Filtro que valida el token JWT en cada petición HTTP.
+     * @param allowedOrigins          Lista de orígenes permitidos delimitados por coma.
      */
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter,
+            @Value("${cors.allowed-origins}") String allowedOrigins) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.allowedOrigins = allowedOrigins;
     }
 
     /**
-     * Configura la cadena de filtros de seguridad HTTP (stateless, reglas de
+     * Configura la cadena de filtros de seguridad HTTP (CORS, stateless, reglas de
      * autorización por rol,
      * manejo de errores 401/403 y registro del filtro JWT antes del filtro de
      * autenticación estándar).
@@ -47,6 +58,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // habilitar CORS con la configuración personalizada
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // para formularios, se desabilita
                 .csrf(csfr -> csfr.disable())
                 // para h2-console
@@ -59,6 +72,8 @@ public class SecurityConfig {
                         .accessDeniedHandler((request, response, accessDeniedException) -> response
                                 .sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden")))
                 .authorizeHttpRequests(auth -> auth
+                        // permitir preflight CORS OPTIONS
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // todos pueden autenticarse
                         .requestMatchers("/api/auth/**", "/h2-console", "/h2-console/**", "/actuator/**").permitAll()
                         // leer clientes, usuario o admin
@@ -84,6 +99,32 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    /**
+     * Configura el origen cruzado (CORS) permitiendo los dominios autorizados
+     * configurados en las variables de entorno / application.properties.
+     *
+     * @return CorsConfigurationSource con los orígenes, métodos y cabeceras permitidos.
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(origin -> !origin.isEmpty())
+                .toList();
+
+        configuration.setAllowedOriginPatterns(origins);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD", "PATCH"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("Set-Cookie", "Authorization"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     /**

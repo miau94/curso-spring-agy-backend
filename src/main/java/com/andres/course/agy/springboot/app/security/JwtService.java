@@ -25,21 +25,29 @@ public class JwtService {
     private final String secretKey;
     private final long jwtExpiration;
     private final String cookieName;
+    private final String cookieSameSite;
+    private final boolean cookieSecure;
 
     /**
      * Constructor que inyecta las propiedades de configuración del JWT y de la cookie desde application.properties.
      *
-     * @param secretKey     Clave secreta en Base64 para firmar y verificar los tokens.
-     * @param jwtExpiration Tiempo de expiración del token en milisegundos.
-     * @param cookieName    Nombre de la cookie HttpOnly donde se almacenará el JWT.
+     * @param secretKey      Clave secreta en Base64 para firmar y verificar los tokens.
+     * @param jwtExpiration  Tiempo de expiración del token en milisegundos.
+     * @param cookieName     Nombre de la cookie HttpOnly donde se almacenará el JWT.
+     * @param cookieSameSite Política SameSite de la cookie (ej. Strict, Lax, None).
+     * @param cookieSecure   Indica si la cookie solo debe transmitirse sobre HTTPS.
      */
     public JwtService(
             @Value("${jwt.secret}") String secretKey,
             @Value("${jwt.expiration}") long jwtExpiration,
-            @Value("${jwt.cookie-name}") String cookieName) {
+            @Value("${jwt.cookie-name}") String cookieName,
+            @Value("${jwt.cookie-same-site}") String cookieSameSite,
+            @Value("${jwt.cookie-secure}") boolean cookieSecure) {
         this.secretKey = secretKey;
         this.jwtExpiration = jwtExpiration;
         this.cookieName = cookieName;
+        this.cookieSameSite = cookieSameSite;
+        this.cookieSecure = cookieSecure;
     }
 
     /**
@@ -157,14 +165,15 @@ public class JwtService {
      * Crea una cookie segura con el atributo HttpOnly activado que almacena el token JWT generado.
      *
      * @param token Token JWT que se guardará como valor de la cookie.
-     * @return Objeto ResponseCookie configurado con HttpOnly, expiración y política SameSite=Strict.
+     * @return Objeto ResponseCookie configurado con HttpOnly, expiración, secure y política SameSite.
      */
     public ResponseCookie generateJwtCookie(String token) {
         return ResponseCookie.from(cookieName, token)
                 .path("/")
                 .maxAge(jwtExpiration / 1000)
                 .httpOnly(true)
-                .sameSite("Strict")
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .build();
     }
 
@@ -178,7 +187,8 @@ public class JwtService {
                 .path("/")
                 .maxAge(0)
                 .httpOnly(true)
-                .sameSite("Strict")
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .build();
     }
 

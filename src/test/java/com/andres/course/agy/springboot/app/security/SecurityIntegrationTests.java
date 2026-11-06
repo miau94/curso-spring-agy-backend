@@ -7,6 +7,7 @@ import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,9 @@ class SecurityIntegrationTests {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Value("${cors.allowed-origins}")
+    private String allowedOrigins;
 
     private MockMvc mockMvc;
 
@@ -149,5 +153,25 @@ class SecurityIntegrationTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value("createdbyadmin@example.com"))
                 .andExpect(jsonPath("$.role").value("USER"));
+    }
+
+    @Test
+    void testCorsPreflightAllowedForConfiguredOrigin() throws Exception {
+        String testOrigin = allowedOrigins.split(",")[0].trim();
+        mockMvc.perform(options("/api/auth/login")
+                        .header("Origin", testOrigin)
+                        .header("Access-Control-Request-Method", "POST")
+                        .header("Access-Control-Request-Headers", "Content-Type"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", testOrigin))
+                .andExpect(header().string("Access-Control-Allow-Credentials", "true"));
+    }
+
+    @Test
+    void testCorsPreflightBlockedForUnconfiguredOrigin() throws Exception {
+        mockMvc.perform(options("/api/auth/login")
+                        .header("Origin", "https://malicious-origin.com")
+                        .header("Access-Control-Request-Method", "POST"))
+                .andExpect(header().doesNotExist("Access-Control-Allow-Origin"));
     }
 }
